@@ -25,7 +25,7 @@ const selectedMonth = ref<number>(new Date().getMonth() + 1)
 const selectedYear = ref<number>(new Date().getFullYear())
 
 const filteredRaports = computed(() => {
-  return instructorRaports.filter(r => {
+  return instructorRaports.filter((r) => {
     return r.month === selectedMonth.value && r.year === selectedYear.value
   })
 })
@@ -34,19 +34,21 @@ function calculateCompletionRate(instructorId: string, month: number, year: numb
   const targetDate = new Date(year, month - 1, 1)
   const nextMonthDate = new Date(year, month, 1)
 
-  const instructorClasses = classes.filter(c => {
+  const instructorClasses = classes.filter((c) => {
     const classStartDate = new Date(c.startDate)
     const classEndDate = new Date(c.endDate)
-    return c.instructorId === instructorId &&
-           classStartDate < nextMonthDate &&
-           classEndDate >= targetDate
+    return (
+      c.instructorId === instructorId &&
+      classStartDate < nextMonthDate &&
+      classEndDate >= targetDate
+    )
   })
 
   let totalParticipants = 0
   let completedParticipants = 0
 
   for (const cls of instructorClasses) {
-    const curriculum = curricula.find(curr => curr.id === cls.curriculumId)
+    const curriculum = curricula.find((curr) => curr.id === cls.curriculumId)
     if (!curriculum) continue
 
     totalParticipants += cls.participants.length
@@ -54,47 +56,59 @@ function calculateCompletionRate(instructorId: string, month: number, year: numb
     for (const participantId of cls.participants) {
       let allRequiredActivitiesCompleted = true
       const relevantInClassIds: Set<string> = new Set()
-      curriculum.items.forEach(item => {
+      curriculum.items.forEach((item) => {
         if (item.trainingMethodType === 'inClass') relevantInClassIds.add(item.contentId)
       })
-      cls.inClassInstructorAssignments?.forEach(assignment => {
+      cls.inClassInstructorAssignments?.forEach((assignment) => {
         relevantInClassIds.add(assignment.inClassId)
       })
 
       for (const inClassId of Array.from(relevantInClassIds)) {
-        const ic = inClasses.find(i => i.id === inClassId)
+        const ic = inClasses.find((i) => i.id === inClassId)
         if (!ic) continue
 
-        const categoriesInInClass = ic.categories.filter(cat =>
-          cat.preTestId && cat.postTestId && cat.materiIds && cat.materiIds.length > 0
+        const categoriesInInClass = ic.categories.filter(
+          (cat) => cat.preTestId && cat.postTestId && cat.materiIds && cat.materiIds.length > 0,
         )
 
         for (const category of categoriesInInClass) {
-          const participantActivityCompletionsInPeriod = inClassActivityCompletions.filter(a => {
+          const participantActivityCompletionsInPeriod = inClassActivityCompletions.filter((a) => {
             const completionDate = new Date(a.completedAt)
-            return a.classId === cls.id &&
-                   a.participantId === participantId &&
-                   a.inClassId === inClassId &&
-                   a.categoryId === category.id &&
-                   completionDate.getMonth() + 1 === month &&
-                   completionDate.getFullYear() === year
+            return (
+              a.classId === cls.id &&
+              a.participantId === participantId &&
+              a.inClassId === inClassId &&
+              a.categoryId === category.id &&
+              completionDate.getMonth() + 1 === month &&
+              completionDate.getFullYear() === year
+            )
           })
 
-          const participantFeedbackSubmissionsInPeriod = feedbackSubmissions.filter(fs => {
+          const participantFeedbackSubmissionsInPeriod = feedbackSubmissions.filter((fs) => {
             const submissionDate = new Date(fs.submittedAt)
-            return fs.classId === cls.id &&
-                   fs.participantId === participantId &&
-                   fs.inClassId === inClassId &&
-                   fs.categoryId === category.id &&
-                   submissionDate.getMonth() + 1 === month &&
-                   submissionDate.getFullYear() === year
+            return (
+              fs.classId === cls.id &&
+              fs.participantId === participantId &&
+              fs.inClassId === inClassId &&
+              fs.categoryId === category.id &&
+              submissionDate.getMonth() + 1 === month &&
+              submissionDate.getFullYear() === year
+            )
           })
 
-          const hasPreTest = participantActivityCompletionsInPeriod.some(a => a.activityType === 'preTest' && a.refId === category.preTestId)
-          const hasPostTest = participantActivityCompletionsInPeriod.some(a => a.activityType === 'postTest' && a.refId === category.postTestId)
-          const hasFeedback = participantFeedbackSubmissionsInPeriod.some(f => f.formAssessmentId === category.feedbackFormId)
-          const allMateriCompleted = category.materiIds.every(mId =>
-            participantActivityCompletionsInPeriod.some(a => a.activityType === 'materi' && a.refId === mId)
+          const hasPreTest = participantActivityCompletionsInPeriod.some(
+            (a) => a.activityType === 'preTest' && a.refId === category.preTestId,
+          )
+          const hasPostTest = participantActivityCompletionsInPeriod.some(
+            (a) => a.activityType === 'postTest' && a.refId === category.postTestId,
+          )
+          const hasFeedback = participantFeedbackSubmissionsInPeriod.some(
+            (f) => f.formAssessmentId === category.feedbackFormId,
+          )
+          const allMateriCompleted = category.materiIds.every((mId) =>
+            participantActivityCompletionsInPeriod.some(
+              (a) => a.activityType === 'materi' && a.refId === mId,
+            ),
           )
 
           if (!hasPreTest || !hasPostTest || !hasFeedback || !allMateriCompleted) {
@@ -107,74 +121,91 @@ function calculateCompletionRate(instructorId: string, month: number, year: numb
       if (allRequiredActivitiesCompleted) completedParticipants++
     }
   }
-  return totalParticipants > 0 ? Math.round((completedParticipants / totalParticipants) * 100 * 100) / 100 : 0
+  return totalParticipants > 0
+    ? Math.round((completedParticipants / totalParticipants) * 100 * 100) / 100
+    : 0
 }
 
 function calculatePassRate(instructorId: string, month: number, year: number): number {
   const targetDate = new Date(year, month - 1, 1)
   const nextMonthDate = new Date(year, month, 1)
 
-  const instructorClasses = classes.filter(c => {
+  const instructorClasses = classes.filter((c) => {
     const classStartDate = new Date(c.startDate)
     const classEndDate = new Date(c.endDate)
-    return c.instructorId === instructorId &&
-           classStartDate < nextMonthDate &&
-           classEndDate >= targetDate
+    return (
+      c.instructorId === instructorId &&
+      classStartDate < nextMonthDate &&
+      classEndDate >= targetDate
+    )
   })
 
   let totalPassed = 0
   let totalCompleted = 0
 
   for (const cls of instructorClasses) {
-    const curriculum = curricula.find(curr => curr.id === cls.curriculumId)
+    const curriculum = curricula.find((curr) => curr.id === cls.curriculumId)
     if (!curriculum) continue
 
     for (const item of curriculum.items) {
       if (item.trainingMethodType !== 'inClass') continue
-      const ic = inClasses.find(i => i.id === item.contentId)
+      const ic = inClasses.find((i) => i.id === item.contentId)
       if (!ic) continue
 
       for (const category of ic.categories) {
         for (const participantId of cls.participants) {
-          const participantActivityCompletionsInPeriod = inClassActivityCompletions.filter(a => {
+          const participantActivityCompletionsInPeriod = inClassActivityCompletions.filter((a) => {
             const completionDate = new Date(a.completedAt)
-            return a.classId === cls.id &&
-                   a.participantId === participantId &&
-                   a.inClassId === ic.id &&
-                   a.categoryId === category.id &&
-                   completionDate.getMonth() + 1 === month &&
-                   completionDate.getFullYear() === year
+            return (
+              a.classId === cls.id &&
+              a.participantId === participantId &&
+              a.inClassId === ic.id &&
+              a.categoryId === category.id &&
+              completionDate.getMonth() + 1 === month &&
+              completionDate.getFullYear() === year
+            )
           })
 
-          const participantFeedbackSubmissionsInPeriod = feedbackSubmissions.filter(fs => {
+          const participantFeedbackSubmissionsInPeriod = feedbackSubmissions.filter((fs) => {
             const submissionDate = new Date(fs.submittedAt)
-            return fs.classId === cls.id &&
-                   fs.participantId === participantId &&
-                   fs.inClassId === ic.id &&
-                   fs.categoryId === category.id &&
-                   submissionDate.getMonth() + 1 === month &&
-                   submissionDate.getFullYear() === year
+            return (
+              fs.classId === cls.id &&
+              fs.participantId === participantId &&
+              fs.inClassId === ic.id &&
+              fs.categoryId === category.id &&
+              submissionDate.getMonth() + 1 === month &&
+              submissionDate.getFullYear() === year
+            )
           })
 
-          const hasPreTest = participantActivityCompletionsInPeriod.some(a => a.activityType === 'preTest' && a.refId === category.preTestId)
-          const hasPostTest = participantActivityCompletionsInPeriod.some(a => a.activityType === 'postTest' && a.refId === category.postTestId)
-          const hasFeedback = participantFeedbackSubmissionsInPeriod.some(f => f.formAssessmentId === category.feedbackFormId)
-          const allMateriCompleted = category.materiIds.every(mId =>
-            participantActivityCompletionsInPeriod.some(a => a.activityType === 'materi' && a.refId === mId)
+          const hasPreTest = participantActivityCompletionsInPeriod.some(
+            (a) => a.activityType === 'preTest' && a.refId === category.preTestId,
+          )
+          const hasPostTest = participantActivityCompletionsInPeriod.some(
+            (a) => a.activityType === 'postTest' && a.refId === category.postTestId,
+          )
+          const hasFeedback = participantFeedbackSubmissionsInPeriod.some(
+            (f) => f.formAssessmentId === category.feedbackFormId,
+          )
+          const allMateriCompleted = category.materiIds.every((mId) =>
+            participantActivityCompletionsInPeriod.some(
+              (a) => a.activityType === 'materi' && a.refId === mId,
+            ),
           )
 
           if (hasPreTest && hasPostTest && hasFeedback && allMateriCompleted) {
             totalCompleted++
-            const postTests = testAttempts.filter(ta =>
-              ta.participantId === participantId &&
-              ta.classId === cls.id &&
-              ta.inClassId === ic.id &&
-              ta.categoryId === category.id &&
-              ta.testType === 'postTest' &&
-              ta.status === 'completed'
+            const postTests = testAttempts.filter(
+              (ta) =>
+                ta.participantId === participantId &&
+                ta.classId === cls.id &&
+                ta.inClassId === ic.id &&
+                ta.categoryId === category.id &&
+                ta.testType === 'postTest' &&
+                ta.status === 'completed',
             )
             if (postTests.length > 0) {
-              const bestScore = Math.max(...postTests.map(t => t.normalizedScore))
+              const bestScore = Math.max(...postTests.map((t) => t.normalizedScore))
               if (bestScore >= item.passingScore) totalPassed++
             }
           }
@@ -185,17 +216,19 @@ function calculatePassRate(instructorId: string, month: number, year: number): n
   return totalCompleted > 0 ? Math.round((totalPassed / totalCompleted) * 100 * 100) / 100 : 0
 }
 
-function calculateFeedbackAverage(inClassId: string): { sectionName: string; averageScore: number }[] {
-  const feedbacks = feedbackSubmissions.filter(fb => fb.inClassId === inClassId)
+function calculateFeedbackAverage(
+  inClassId: string,
+): { sectionName: string; averageScore: number }[] {
+  const feedbacks = feedbackSubmissions.filter((fb) => fb.inClassId === inClassId)
   const aspectScores: Record<string, { total: number; count: number }> = {}
 
   for (const feedback of feedbacks) {
-    const form = formAssessments.find(f => f.id === feedback.formAssessmentId)
+    const form = formAssessments.find((f) => f.id === feedback.formAssessmentId)
     if (!form) continue
 
     for (const field of form.fields) {
       if (field.type === 'rating') {
-        const answers = feedback.answers.filter(a => a.fieldId === field.id)
+        const answers = feedback.answers.filter((a) => a.fieldId === field.id)
         for (const answer of answers) {
           const score = Number(answer.value)
           if (!aspectScores[field.label]) aspectScores[field.label] = { total: 0, count: 0 }
@@ -211,12 +244,12 @@ function calculateFeedbackAverage(inClassId: string): { sectionName: string; ave
 
   return Object.entries(aspectScores).map(([sectionName, data]) => ({
     sectionName,
-    averageScore: Math.round(data.total / data.count * 10) / 10
+    averageScore: Math.round((data.total / data.count) * 10) / 10,
   }))
 }
 
 function getInstructorClasses(instructorId: string) {
-  return classes.filter(c => c.instructorId === instructorId)
+  return classes.filter((c) => c.instructorId === instructorId)
 }
 
 function viewDetail(id: string) {
@@ -224,10 +257,11 @@ function viewDetail(id: string) {
 }
 
 async function generateRaport() {
-  const existingRaport = instructorRaports.find(r =>
-    r.month === selectedMonth.value &&
-    r.year === selectedYear.value &&
-    r.instructorId === auth.userId
+  const existingRaport = instructorRaports.find(
+    (r) =>
+      r.month === selectedMonth.value &&
+      r.year === selectedYear.value &&
+      r.instructorId === auth.userId,
   )
   if (existingRaport && existingRaport.status === 'draft') {
     alert('A draft raport already exists for this period. Please complete it first.')
@@ -239,7 +273,7 @@ async function generateRaport() {
 
   // Group classes by program type first
   const classesByProgram: Record<string, typeof classes> = {}
-  instructorClasses.forEach(c => {
+  instructorClasses.forEach((c) => {
     if (!classesByProgram[c.programTypeId]) classesByProgram[c.programTypeId] = []
     classesByProgram[c.programTypeId]?.push(c)
   })
@@ -252,21 +286,21 @@ async function generateRaport() {
     const uniqueMateris: Set<string> = new Set()
     const materiToCategoryMap: Record<string, { categoryId: string; inClassId: string }> = {}
 
-    classList.forEach(cls => {
+    classList.forEach((cls) => {
       const relevantInClassIds: Set<string> = new Set()
       if (cls.knowledgeTestClassId) relevantInClassIds.add(cls.knowledgeTestClassId)
       if (cls.curriculumId) {
-        const curriculum = curricula.find(curr => curr.id === cls.curriculumId)
-        curriculum?.items.forEach(item => {
+        const curriculum = curricula.find((curr) => curr.id === cls.curriculumId)
+        curriculum?.items.forEach((item) => {
           if (item.trainingMethodType === 'inClass') relevantInClassIds.add(item.contentId)
         })
       }
 
-      Array.from(relevantInClassIds).forEach(inClassId => {
-        const ic = inClasses.find(i => i.id === inClassId)
+      Array.from(relevantInClassIds).forEach((inClassId) => {
+        const ic = inClasses.find((i) => i.id === inClassId)
         if (!ic) return
-        ic.categories.forEach(cat => {
-          cat.materiIds.forEach(mId => {
+        ic.categories.forEach((cat) => {
+          cat.materiIds.forEach((mId) => {
             uniqueMateris.add(mId)
             materiToCategoryMap[mId] = { categoryId: cat.id, inClassId }
           })
@@ -275,7 +309,7 @@ async function generateRaport() {
     })
 
     // Compute LGI value for each materi based on testAttempts
-    uniqueMateris.forEach(mId => {
+    uniqueMateris.forEach((mId) => {
       const mapInfo = materiToCategoryMap[mId]
       if (!mapInfo) return
       const { categoryId, inClassId } = mapInfo
@@ -284,30 +318,32 @@ async function generateRaport() {
       const allPreScores: number[] = []
       const allPostScores: number[] = []
 
-      classList.forEach(cls => {
-        cls.participants.forEach(pId => {
+      classList.forEach((cls) => {
+        cls.participants.forEach((pId) => {
           // Pre-test attempt
-          const preAttempts = testAttempts.filter(ta =>
-            ta.participantId === pId &&
-            ta.classId === cls.id &&
-            ta.inClassId === inClassId &&
-            ta.categoryId === categoryId &&
-            ta.testType === 'preTest' &&
-            ta.status === 'completed'
+          const preAttempts = testAttempts.filter(
+            (ta) =>
+              ta.participantId === pId &&
+              ta.classId === cls.id &&
+              ta.inClassId === inClassId &&
+              ta.categoryId === categoryId &&
+              ta.testType === 'preTest' &&
+              ta.status === 'completed',
           )
           // Post-test attempt
-          const postAttempts = testAttempts.filter(ta =>
-            ta.participantId === pId &&
-            ta.classId === cls.id &&
-            ta.inClassId === inClassId &&
-            ta.categoryId === categoryId &&
-            ta.testType === 'postTest' &&
-            ta.status === 'completed'
+          const postAttempts = testAttempts.filter(
+            (ta) =>
+              ta.participantId === pId &&
+              ta.classId === cls.id &&
+              ta.inClassId === inClassId &&
+              ta.categoryId === categoryId &&
+              ta.testType === 'postTest' &&
+              ta.status === 'completed',
           )
 
           if (preAttempts.length > 0 && postAttempts.length > 0) {
-            const preScore = Math.max(...preAttempts.map(a => a.normalizedScore))
-            const postScore = Math.max(...postAttempts.map(a => a.normalizedScore))
+            const preScore = Math.max(...preAttempts.map((a) => a.normalizedScore))
+            const postScore = Math.max(...postAttempts.map((a) => a.normalizedScore))
             allPreScores.push(preScore)
             allPostScores.push(postScore)
           }
@@ -320,10 +356,10 @@ async function generateRaport() {
         const avgPost = allPostScores.reduce((a, b) => a + b, 0) / allPostScores.length
         const denominator = 100 - avgPre
         const lgiVal = denominator !== 0 ? (avgPost - avgPre) / denominator : 0
-        const mName = materis.find(m => m.id === mId)?.title || mId
+        const mName = materis.find((m) => m.id === mId)?.title || mId
         materiLgis.push({
           materiName: mName,
-          lgiValue: Math.round(lgiVal * 100) / 100
+          lgiValue: Math.round(lgiVal * 100) / 100,
         })
       }
     })
@@ -333,17 +369,20 @@ async function generateRaport() {
       lgiByProgram.push({
         programTypeName: pTypeName,
         lgiValue: Math.round(avgProgramLgi * 100) / 100,
-        materiLgis
+        materiLgis,
       })
     }
   }
 
-  const allInClassIds = instructorClasses.map(c => c.knowledgeTestClassId).filter(Boolean) as string[]
+  const allInClassIds = instructorClasses
+    .map((c) => c.knowledgeTestClassId)
+    .filter(Boolean) as string[]
   const combinedFeedback: Record<string, { total: number; count: number }> = {}
   for (const icId of allInClassIds) {
     const feedback = calculateFeedbackAverage(icId)
     for (const item of feedback) {
-      if (!combinedFeedback[item.sectionName]) combinedFeedback[item.sectionName] = { total: 0, count: 0 }
+      if (!combinedFeedback[item.sectionName])
+        combinedFeedback[item.sectionName] = { total: 0, count: 0 }
       const scoreData = combinedFeedback[item.sectionName]
       if (scoreData) {
         scoreData.total += item.averageScore
@@ -352,17 +391,30 @@ async function generateRaport() {
     }
   }
 
-  const finalFeedback: { sectionName: string; averageScore: number }[] = Object.entries(combinedFeedback).map(([sectionName, data]) => ({
+  const finalFeedback: { sectionName: string; averageScore: number }[] = Object.entries(
+    combinedFeedback,
+  ).map(([sectionName, data]) => ({
     sectionName,
-    averageScore: Math.round(data.total / data.count * 10) / 10
+    averageScore: Math.round((data.total / data.count) * 10) / 10,
   }))
-  const defaultFeedbackSections = ['Kemampuan menyampaikan visi', 'Keterampilan delegasi', 'Pemberian motivasi tim', 'Pengambilan keputusan', 'Manajemen konflik', 'Kemampuan mentoring']
-  const finalFeedbackWithSixSections = defaultFeedbackSections.map(sectionName => {
-    const existing = finalFeedback.find(f => f.sectionName === sectionName)
+  const defaultFeedbackSections = [
+    'Communication',
+    'Time Management',
+    'Data Analyst',
+    'Presentation',
+    'Food Safety/CAPA',
+    'Kemampuan mentoring',
+  ]
+  const finalFeedbackWithSixSections = defaultFeedbackSections.map((sectionName) => {
+    const existing = finalFeedback.find((f) => f.sectionName === sectionName)
     return existing || { sectionName, averageScore: 0 }
   })
 
-  const completionRate = calculateCompletionRate(auth.userId, selectedMonth.value, selectedYear.value)
+  const completionRate = calculateCompletionRate(
+    auth.userId,
+    selectedMonth.value,
+    selectedYear.value,
+  )
   const passRate = calculatePassRate(auth.userId, selectedMonth.value, selectedYear.value)
 
   if (lgiByProgram.length > 0 || completionRate > 0 || passRate > 0) {
@@ -400,12 +452,17 @@ async function generateRaport() {
       <h3 class="text-lg font-medium mb-4">Filter by Period</h3>
       <div class="flex gap-4">
         <select v-model.number="selectedMonth" class="border rounded px-3 py-2">
-          <option v-for="m in 12" :key="m" :value="m">{{ new Date(2026, m-1).toLocaleString('default', { month: 'long' }) }}</option>
+          <option v-for="m in 12" :key="m" :value="m">
+            {{ new Date(2026, m - 1).toLocaleString('default', { month: 'long' }) }}
+          </option>
         </select>
         <select v-model.number="selectedYear" class="border rounded px-3 py-2">
           <option v-for="y in [2026, 2025, 2024]" :key="y" :value="y">{{ y }}</option>
         </select>
-        <button @click="generateRaport" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+        <button
+          @click="generateRaport"
+          class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+        >
           Generate Raport
         </button>
       </div>
@@ -424,21 +481,29 @@ async function generateRaport() {
         <tbody class="text-sm">
           <tr v-for="raport in filteredRaports" :key="raport.id" class="hover:bg-gray-50 border-b">
             <td class="p-4 font-medium">
-              {{ users.find(u => u.id === raport.instructorId)?.name || raport.instructorId }}
+              {{ users.find((u) => u.id === raport.instructorId)?.name || raport.instructorId }}
             </td>
             <td class="p-4">
-              {{ new Date(2026, raport.month - 1).toLocaleString('default', { month: 'long' }) }} {{ raport.year }}
+              {{ new Date(2026, raport.month - 1).toLocaleString('default', { month: 'long' }) }}
+              {{ raport.year }}
             </td>
             <td class="p-4">
-              <span :class="[
-                'px-2 py-1 rounded text-xs font-semibold uppercase',
-                raport.status === 'published' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'
-              ]">
+              <span
+                :class="[
+                  'px-2 py-1 rounded text-xs font-semibold uppercase',
+                  raport.status === 'published'
+                    ? 'bg-green-100 text-green-800'
+                    : 'bg-yellow-100 text-yellow-800',
+                ]"
+              >
                 {{ raport.status }}
               </span>
             </td>
             <td class="p-4 text-right">
-              <button @click="viewDetail(raport.id)" class="bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-1.5 rounded font-medium transition">
+              <button
+                @click="viewDetail(raport.id)"
+                class="bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-1.5 rounded font-medium transition"
+              >
                 View Detail &rarr;
               </button>
             </td>

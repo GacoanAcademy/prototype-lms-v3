@@ -267,6 +267,20 @@ function save() {
                   />
                 </div>
                 <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-1">Section Type</label>
+                  <div class="flex gap-2">
+                    <select
+                      v-model="activeSection.sectionTypeId"
+                      class="flex-1 border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    >
+                      <option value="">-- Select Type --</option>
+                      <option v-for="opt in sectionTypeOptions" :key="opt.value" :value="opt.value">
+                        {{ opt.label }}
+                      </option>
+                    </select>
+                  </div>
+                </div>
+                <div>
                   <label class="block text-sm font-medium text-gray-700 mb-1">Section Weight</label>
                   <input
                     v-model.number="activeSection.weight"

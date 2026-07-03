@@ -664,13 +664,10 @@ export function applyRaportMockData(
       }
     }
 
-    const result = Object.entries(bySectionName).map(([name, vals]) => ({
+    return Object.entries(bySectionName).map(([name, vals]) => ({
       sectionName: name,
       averageScore: vals.length > 0 ? Math.round((vals.reduce((a, b) => a + b, 0) / vals.length) * 10) / 10 : 0,
     }))
-    while (result.length < 6) result.push({ sectionName: '', averageScore: 0 })
-    if (result.length > 6) result.length = 6
-    return result.map((s, i) => ({ sectionName: s.sectionName || `Aspect ${i + 1}`, averageScore: s.averageScore }))
   }
 
   const raportInstructors = ['u2', 'u13']

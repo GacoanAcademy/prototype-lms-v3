@@ -17,6 +17,14 @@ const auth = useAuthStore()
 const raportId = route.params.id as string
 const raport = computed(() => instructorRaports.find(r => r.id === raportId))
 
+const feedbackAspects = computed(() => raport.value?.quantitativeData.feedbackAverage ?? [])
+
+const overallFeedbackAvg = computed(() => {
+  const fa = feedbackAspects.value.filter(s => s.averageScore > 0)
+  if (fa.length === 0) return 0
+  return fa.reduce((sum, s) => sum + s.averageScore, 0) / fa.length
+})
+
 const qualitativeInput = ref('')
 const expandedPrograms = ref<Record<string, boolean>>({})
 
@@ -212,10 +220,11 @@ function goBack() {
                 <h4 class="text-2xl font-bold text-slate-900">
                   {{ raport.quantitativeData.completionRate.toFixed(1) }}%
                 </h4>
-                <span :class="['text-xs font-bold', getTrend(raport.quantitativeData.completionRate, prevRaport?.quantitativeData.completionRate).color]">
-                  {{ getTrend(raport.quantitativeData.completionRate, prevRaport?.quantitativeData.completionRate).icon }} 
-                  {{ getTrend(raport.quantitativeData.completionRate, prevRaport?.quantitativeData.completionRate).value.toFixed(1) }}%
+                <span v-if="prevRaport" :class="['text-xs font-bold', getTrend(raport.quantitativeData.completionRate, prevRaport.quantitativeData.completionRate).color]">
+                  {{ getTrend(raport.quantitativeData.completionRate, prevRaport.quantitativeData.completionRate).icon }} 
+                  {{ getTrend(raport.quantitativeData.completionRate, prevRaport.quantitativeData.completionRate).value.toFixed(1) }}%
                 </span>
+                <span v-else class="text-xs text-gray-400 italic">No previous data</span>
               </div>
               <p class="text-[10px] text-slate-400 mt-1">Activities fully completed</p>
             </div>
@@ -225,10 +234,11 @@ function goBack() {
                 <h4 class="text-2xl font-bold text-emerald-600">
                   {{ raport.quantitativeData.passRate.toFixed(1) }}%
                 </h4>
-                <span :class="['text-xs font-bold', getTrend(raport.quantitativeData.passRate, prevRaport?.quantitativeData.passRate).color]">
-                  {{ getTrend(raport.quantitativeData.passRate, prevRaport?.quantitativeData.passRate).icon }} 
-                  {{ getTrend(raport.quantitativeData.passRate, prevRaport?.quantitativeData.passRate).value.toFixed(1) }}%
+                <span v-if="prevRaport" :class="['text-xs font-bold', getTrend(raport.quantitativeData.passRate, prevRaport.quantitativeData.passRate).color]">
+                  {{ getTrend(raport.quantitativeData.passRate, prevRaport.quantitativeData.passRate).icon }} 
+                  {{ getTrend(raport.quantitativeData.passRate, prevRaport.quantitativeData.passRate).value.toFixed(1) }}%
                 </span>
+                <span v-else class="text-xs text-gray-400 italic">No previous data</span>
               </div>
               <p class="text-[10px] text-slate-400 mt-1">Passing standard achieved</p>
             </div>
@@ -238,15 +248,20 @@ function goBack() {
         <!-- Right panel: Spider Graph and Qualitative Feedback -->
         <div class="space-y-6">
           <div class="bg-slate-50 p-5 rounded-xl border border-slate-100">
-            <h3 class="text-sm font-bold text-slate-800 mb-4">6-Section Feedback Analysis</h3>
+            <h3 class="text-sm font-bold text-slate-800 mb-4">Feedback Analysis</h3>
             <div class="flex flex-col items-center justify-center">
-              <SpiderChart :data="raport.quantitativeData.feedbackAverage" />
-              <div class="grid grid-cols-2 gap-3 w-full mt-6 text-[10px] text-slate-600">
-                <div v-for="sect in raport.quantitativeData.feedbackAverage" :key="sect.sectionName" class="flex items-center gap-1.5">
+              <SpiderChart :data="feedbackAspects" />
+              <div v-if="feedbackAspects.length > 0" class="grid grid-cols-2 gap-3 w-full mt-6 text-[10px] text-slate-600">
+                <div v-for="sect in feedbackAspects" :key="sect.sectionName" class="flex items-center gap-1.5">
                   <span class="h-2 w-2 rounded-full bg-blue-500"></span>
                   <span class="truncate" :title="sect.sectionName">{{ sect.sectionName }}: <strong>{{ sect.averageScore }}</strong></span>
                 </div>
               </div>
+              <div v-if="overallFeedbackAvg > 0" class="mt-4 pt-3 border-t border-slate-200 text-center">
+                <span class="text-xs text-slate-500">Overall Average Feedback</span>
+                <p class="text-lg font-bold text-blue-700">{{ overallFeedbackAvg.toFixed(1) }} / 5.0</p>
+              </div>
+              <div v-if="feedbackAspects.length === 0" class="mt-4 text-xs text-slate-400 italic text-center">No feedback data available</div>
             </div>
           </div>
 

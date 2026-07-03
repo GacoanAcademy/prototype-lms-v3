@@ -345,21 +345,10 @@ export function calculateFeedbackAverage(
     }
   }
 
-  const result = Object.entries(scoresBySection).map(([label, scores]) => ({
+  return Object.entries(scoresBySection).map(([label, scores]) => ({
     sectionName: label,
     averageScore: scores.length > 0
       ? Math.round((scores.reduce((a, b) => a + b, 0) / scores.length) * 10) / 10
       : 0,
-  }))
-
-  while (result.length < 6) {
-    result.push({ sectionName: '', averageScore: 0 })
-  }
-
-  if (result.length > 6) result.length = 6
-
-  return result.map((s, i) => ({
-    sectionName: s.sectionName || `Aspect ${i + 1}`,
-    averageScore: s.averageScore,
   }))
 }

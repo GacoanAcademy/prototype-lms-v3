@@ -134,6 +134,7 @@ export interface TrainingMethodComponent {
   weight: number
   passingScore: number
   contentId: string
+  knowledgeTestClassId?: string
 }
 
 export interface MethodCategory {
@@ -142,6 +143,7 @@ export interface MethodCategory {
   weight: number
   formAssessmentId: string
   typeId?: string
+  knowledgeTestClassId?: string
   components?: TrainingMethodComponent[]
 }
 

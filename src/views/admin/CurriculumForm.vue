@@ -9,6 +9,7 @@ import {
   trainingMethodTypes,
   programTypes,
   programCategories,
+  tests,
 } from '@/data/mockData'
 import type { CurriculumItem } from '@/types'
 
@@ -30,6 +31,31 @@ const selectedCategoryName = computed(() => {
   const cat = programCategories.find(c => c.id === pt.programCategoryId)
   return cat ? cat.name : ''
 })
+
+function getLinkedKnowledgeTest(trainingMethodId: string) {
+  const method = trainingMethods.find(m => m.id === trainingMethodId)
+  if (!method) return null
+  const links: { knowledgeTestClass: typeof knowledgeTestClasses[0]; test: typeof tests[0] | undefined; source: string }[] = []
+  for (const cat of method.categories) {
+    if (cat.knowledgeTestClassId) {
+      const ktClass = knowledgeTestClasses.find(kt => kt.id === cat.knowledgeTestClassId)
+      if (ktClass) {
+        const test = tests.find(t => t.id === ktClass.testId)
+        links.push({ knowledgeTestClass: ktClass, test, source: `Category: ${cat.name}` })
+      }
+    }
+    for (const comp of cat.components ?? []) {
+      if (comp.knowledgeTestClassId) {
+        const ktClass = knowledgeTestClasses.find(kt => kt.id === comp.knowledgeTestClassId)
+        if (ktClass) {
+          const test = tests.find(t => t.id === ktClass.testId)
+          links.push({ knowledgeTestClass: ktClass, test, source: `Component: ${comp.contentId}` })
+        }
+      }
+    }
+  }
+  return links.length > 0 ? links : null
+}
 
 const methodTypes: { value: string; label: string; contentLabel: string }[] = [
   { value: 'knowledgeTest', label: 'Knowledge Test', contentLabel: 'Knowledge Test' },
@@ -201,6 +227,23 @@ function save() {
                 type="number"
                 class="w-full border rounded px-2 py-1 text-sm"
               />
+            </div>
+          </div>
+          <div
+            v-if="item.trainingMethodType !== 'uploadFile' && item.trainingMethodType !== 'inClass' && item.trainingMethodType !== 'knowledgeTest' && getLinkedKnowledgeTest(item.contentId)"
+            class="mt-2 space-y-1"
+          >
+            <div
+              v-for="(link, li) in getLinkedKnowledgeTest(item.contentId)"
+              :key="li"
+              class="p-2 bg-blue-50 border border-blue-200 rounded text-xs"
+            >
+              <span class="font-medium text-blue-700">Embedded Knowledge Test:</span>
+              <span class="text-blue-600 ml-1">{{ link.knowledgeTestClass.name }}</span>
+              <span class="text-blue-500 ml-1">
+                (Pass: {{ link.knowledgeTestClass.passingScore }}%,
+                Test: {{ link.test?.title }})
+              </span>
             </div>
           </div>
         </div>

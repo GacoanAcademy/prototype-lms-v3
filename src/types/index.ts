@@ -153,6 +153,8 @@ export interface TrainingMethod {
   description: string
   typeId: string
   categories: MethodCategory[]
+  knowledgeTestClassId?: string
+  knowledgeTestWeight?: number
   createdBy: string
   createdAt: string
 }

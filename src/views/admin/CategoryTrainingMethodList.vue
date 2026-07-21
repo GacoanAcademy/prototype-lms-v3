@@ -2,6 +2,16 @@
 import { trainingMethodTypes } from '@/data/mockData'
 import { useRouter } from 'vue-router'
 const router = useRouter()
+
+const hardcodedTypes: Record<string, string> = {
+  knowledgeTest: 'Knowledge Test',
+}
+
+function typeName(typeId: string) {
+  if (hardcodedTypes[typeId]) return hardcodedTypes[typeId]
+  const t = trainingMethodTypes.find(t => t.id === typeId)
+  return t ? t.name : typeId
+}
 </script>
 
 <template>

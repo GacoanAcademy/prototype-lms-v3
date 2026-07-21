@@ -15,6 +15,28 @@ function getMethodTitle(contentId: string, type?: string): string {
   return m ? m.title : contentId
 }
 
+function getTrainingMethodScore(item: { id: string; contentId: string }, cls: typeof classes[number], pid: string): number {
+  const method = trainingMethods.find(m => m.id === item.contentId)
+  if (!method) return 0
+
+  // Handle knowledge test as a standalone training method
+  if (method.typeId === 'knowledgeTest') {
+    const kt = knowledgeTestClasses.find(k => k.id === method.knowledgeTestClassId)
+    if (!kt) return 0
+    const atts = testAttempts.filter(a => a.participantId === pid && a.classId === cls.id && a.testId === kt.testId)
+    // Apply knowledge test weight to the score
+    return Math.round(atts.length > 0 ? atts.reduce((s, a) => s + a.normalizedScore, 0) / atts.length * (method.knowledgeTestWeight || 100) / 100 : 0)
+  }
+
+  const cats = method.categories ?? []
+  const totalWeight = cats.reduce((s: number, c: any) => s + c.weight, 0) || 1
+  let weightedSum = 0
+  cats.forEach((cat: any) => {
+    weightedSum += computeCategoryScore(item, cls, pid, cat) * (cat.weight / totalWeight)
+  })
+  return Math.round(weightedSum)
+}
+
 function computeCategoryScore(item: { id: string; contentId: string }, cls: typeof classes[number], pid: string, cat: any): number {
   const components = cat.components ?? []
   if (components.length === 0) {
@@ -59,13 +81,18 @@ const transcripts = computed(() => myClasses.value.map(cls => {
       score = atts.length > 0 ? Math.round(atts.reduce((s, a) => s + a.normalizedScore, 0) / atts.length) : 0
     } else {
       const method = trainingMethods.find(m => m.id === item.contentId)
-      const cats = method?.categories ?? []
-      const totalWeight = cats.reduce((s: number, c: any) => s + c.weight, 0) || 1
-      let weightedSum = 0
-      cats.forEach((cat: any) => {
-        weightedSum += computeCategoryScore(item, cls, auth.userId, cat) * (cat.weight / totalWeight)
-      })
-      score = Math.round(weightedSum)
+      if (method?.typeId === 'knowledgeTest') {
+        const kt = knowledgeTestClasses.find(k => k.id === method.knowledgeTestClassId)
+        if (!kt) {
+          score = 0
+        } else {
+          const atts = testAttempts.filter(a => a.participantId === auth.userId && a.classId === cls.id && a.testId === kt.testId)
+          score = atts.length > 0 ? Math.round(atts.reduce((s, a) => s + a.normalizedScore, 0) / atts.length) : 0
+        }
+      } else {
+        const scoreFromTrainingMethod = getTrainingMethodScore(item, cls, auth.userId)
+        score = scoreFromTrainingMethod
+      }
     }
     const passStatus = score >= item.passingScore ? 'pass' : 'fail'
     const title = getMethodTitle(item.contentId, item.trainingMethodType)

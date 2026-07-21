@@ -13,7 +13,8 @@ const title = ref(existing?.title ?? '')
 const description = ref(existing?.description ?? '')
 const typeId = ref(existing?.typeId ?? trainingMethodTypes[0]?.id ?? '')
 const categories = ref<MethodCategory[]>(existing?.categories ?? [])
-const selectedKnowledgeTestClassId = ref('')
+const knowledgeTestClassId = ref(existing?.knowledgeTestClassId ?? '')
+const knowledgeTestWeight = ref<number>(existing?.knowledgeTestWeight ?? 100)
 
 const isKnowledgeTestType = computed(() => typeId.value === 'knowledgeTest')
 
@@ -93,38 +94,53 @@ function save() {
       <div v-if="isKnowledgeTestType">
         <div class="border rounded p-4 bg-blue-50 border-blue-200">
           <h3 class="font-semibold text-blue-800 mb-3">Knowledge Test Selection</h3>
-          <div class="mb-3">
-            <label class="text-xs font-medium text-gray-600">Select Knowledge Test Class</label>
-            <select v-model="selectedKnowledgeTestClassId" class="w-full border rounded px-3 py-2 text-sm">
-              <option value="">-- Select Knowledge Test --</option>
-              <option v-for="kt in knowledgeTestClasses" :key="kt.id" :value="kt.id">
-                {{ kt.name }} (Pass: {{ kt.passingScore }}%, Max: {{ kt.maxParticipants }})
-              </option>
-            </select>
+          <div class="grid grid-cols-3 gap-3 mb-3">
+            <div class="col-span-2">
+              <label class="text-xs font-medium text-gray-600">Select Knowledge Test Class</label>
+              <select v-model="knowledgeTestClassId" class="w-full border rounded px-3 py-2 text-sm">
+                <option value="">-- Select Knowledge Test --</option>
+                <option v-for="kt in knowledgeTestClasses" :key="kt.id" :value="kt.id">
+                  {{ kt.name }} (Pass: {{ kt.passingScore }}%, Max: {{ kt.maxParticipants }})
+                </option>
+              </select>
+            </div>
+            <div>
+              <label class="text-xs font-medium text-gray-600">Weight (%)</label>
+              <input
+                v-model.number="knowledgeTestWeight"
+                type="number"
+                min="0"
+                max="100"
+                class="w-full border rounded px-3 py-2 text-sm"
+              />
+            </div>
           </div>
+          <p class="text-xs text-gray-500 mb-2">
+            The Knowledge Test score contributes <span class="font-semibold">{{ knowledgeTestWeight }}%</span> to this training method's total score.
+          </p>
 
           <div
-            v-if="selectedKnowledgeTestClassId && getTestQuestions(selectedKnowledgeTestClassId)"
+            v-if="knowledgeTestClassId && getTestQuestions(knowledgeTestClassId)"
             class="p-3 bg-white border border-blue-200 rounded"
           >
             <div class="flex items-center justify-between mb-2">
               <span class="text-sm font-semibold text-blue-700">
-                {{ getTestQuestions(selectedKnowledgeTestClassId)?.test.title }}
+                {{ getTestQuestions(knowledgeTestClassId)?.test.title }}
               </span>
               <span class="text-xs text-blue-500">
-                {{ getTestQuestions(selectedKnowledgeTestClassId)?.test.questions.length }} questions
-                &middot; {{ getTestQuestions(selectedKnowledgeTestClassId)?.test.timeLimit }} min
-                &middot; {{ getTestQuestions(selectedKnowledgeTestClassId)?.test.randomize ? 'Randomized' : 'Fixed order' }}
+                {{ getTestQuestions(knowledgeTestClassId)?.test.questions.length }} questions
+                &middot; {{ getTestQuestions(knowledgeTestClassId)?.test.timeLimit }} min
+                &middot; {{ getTestQuestions(knowledgeTestClassId)?.test.randomize ? 'Randomized' : 'Fixed order' }}
               </span>
             </div>
             <p class="text-xs text-gray-500 mb-2">
-              {{ getTestQuestions(selectedKnowledgeTestClassId)?.test.description }}
+              {{ getTestQuestions(knowledgeTestClassId)?.test.description }}
             </p>
             <div class="border-t pt-2 mt-2">
               <h4 class="text-xs font-semibold uppercase text-gray-500 mb-2">Questions</h4>
               <ol class="list-decimal list-inside space-y-2">
                 <li
-                  v-for="q in getTestQuestions(selectedKnowledgeTestClassId)?.test.questions"
+                  v-for="q in getTestQuestions(knowledgeTestClassId)?.test.questions"
                   :key="q.id"
                   class="text-xs text-gray-700"
                 >

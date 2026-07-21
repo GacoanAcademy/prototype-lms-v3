@@ -35,7 +35,19 @@ const selectedCategoryName = computed(() => {
 function getLinkedKnowledgeTest(trainingMethodId: string) {
   const method = trainingMethods.find(m => m.id === trainingMethodId)
   if (!method) return null
-  const links: { knowledgeTestClass: typeof knowledgeTestClasses[0]; test: typeof tests[0] | undefined; source: string }[] = []
+  const links: { knowledgeTestClass: typeof knowledgeTestClasses[0]; test: typeof tests[0] | undefined; source: string; weight?: number }[] = []
+  if (method.knowledgeTestClassId) {
+    const ktClass = knowledgeTestClasses.find(kt => kt.id === method.knowledgeTestClassId)
+    if (ktClass) {
+      const test = tests.find(t => t.id === ktClass.testId)
+      links.push({
+        knowledgeTestClass: ktClass,
+        test,
+        source: 'Training Method',
+        weight: method.knowledgeTestWeight,
+      })
+    }
+  }
   for (const cat of method.categories) {
     if (cat.knowledgeTestClassId) {
       const ktClass = knowledgeTestClasses.find(kt => kt.id === cat.knowledgeTestClassId)
@@ -238,11 +250,13 @@ function save() {
               :key="li"
               class="p-2 bg-blue-50 border border-blue-200 rounded text-xs"
             >
-              <span class="font-medium text-blue-700">Embedded Knowledge Test:</span>
+              <span class="font-medium text-blue-700">Embedded Knowledge Test ({{ link.source }}):</span>
               <span class="text-blue-600 ml-1">{{ link.knowledgeTestClass.name }}</span>
               <span class="text-blue-500 ml-1">
                 (Pass: {{ link.knowledgeTestClass.passingScore }}%,
-                Test: {{ link.test?.title }})
+                Test: {{ link.test?.title }}
+                <span v-if="link.weight != null"> &middot; Weight: {{ link.weight }}%</span>
+                )
               </span>
             </div>
           </div>

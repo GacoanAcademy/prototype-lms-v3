@@ -1156,6 +1156,17 @@ export const trainingMethods: TrainingMethod[] = [
     createdBy: 'u5',
     createdAt: '2026-04-01T08:00:00Z',
   },
+  {
+    id: 'ktm1',
+    title: 'Basic Accounting Knowledge Screening',
+    description: 'Knowledge test screening untuk akuntansi dasar',
+    typeId: 'knowledgeTest',
+    categories: [],
+    knowledgeTestClassId: 'kt2',
+    knowledgeTestWeight: 100,
+    createdBy: 'u5',
+    createdAt: '2026-04-15T08:00:00Z',
+  },
 ]
 
 // ── Submissions ──

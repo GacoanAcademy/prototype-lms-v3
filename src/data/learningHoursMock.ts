@@ -91,7 +91,7 @@ function generateActivityLogs(): LHActivityLog[] {
           const dayOffset = Math.floor(rand() * dayCount)
           const date = new Date(startDate)
           date.setDate(date.getDate() + dayOffset)
-          const dateStr = date.toISOString().split('T')[0]
+          const dateStr = date.toISOString().slice(0, 10)
 
           const materiDuration = Math.floor(rand() * 3600) + 600
           logs.push({
@@ -140,7 +140,7 @@ function generateActivityLogs(): LHActivityLog[] {
           const dayOffset = Math.floor(rand() * dayCount)
           const date = new Date(startDate)
           date.setDate(date.getDate() + dayOffset)
-          const dateStr = date.toISOString().split('T')[0]
+          const dateStr = date.toISOString().slice(0, 10)
 
           const participantsCount = Math.floor(rand() * 10) + 5
           const participantsPassed = Math.floor(

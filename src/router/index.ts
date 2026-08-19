@@ -19,6 +19,11 @@ const routes = [
         name: 'admin-dashboard',
         component: () => import('@/views/dashboard/AdminDashboard.vue'),
       },
+      {
+        path: 'learning-hours',
+        name: 'admin-learning-hours',
+        component: () => import('@/views/admin/learning-hours/LearningHoursView.vue'),
+      },
       { path: 'tests', name: 'admin-tests', component: () => import('@/views/admin/TestList.vue') },
       {
         path: 'tests/new',

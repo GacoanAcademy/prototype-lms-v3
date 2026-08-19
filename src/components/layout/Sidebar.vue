@@ -26,6 +26,7 @@ const navItems = computed<MenuEntry[]>(() => {
   if (role === 'admin') {
     return [
       { label: 'Dashboard', to: '/admin/dashboard', icon: '📊' },
+      { label: 'Learning Hours', to: '/admin/learning-hours', icon: '⏱️' },
       { label: 'Test Bank', to: '/admin/tests', icon: '📝' },
       { label: 'Materi Bank', to: '/admin/materi', icon: '📚' },
       { label: 'Materi Types', to: '/admin/materi-type', icon: '📦' },

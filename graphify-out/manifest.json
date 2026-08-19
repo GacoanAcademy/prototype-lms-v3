@@ -470,13 +470,13 @@
     "semantic_hash": ""
   },
   "src/data/learningHoursMock.ts": {
-    "mtime": 1787109912.28459,
-    "ast_hash": "3bd2f775c08a8b2891d587563f474f80",
+    "mtime": 1787111476.4917657,
+    "ast_hash": "4b309dd58747f300cab7c99e6a0f4505",
     "semantic_hash": ""
   },
   "src/types/learningHours.ts": {
-    "mtime": 1787109782.7380428,
-    "ast_hash": "43fa57da798d7002cab84cc50aad224e",
+    "mtime": 1787113992.1720243,
+    "ast_hash": "69d56df33efaae4183d88e18634b38ab",
     "semantic_hash": ""
   },
   "src/views/admin/learning-hours/FilterBar.vue": {
@@ -490,8 +490,8 @@
     "semantic_hash": ""
   },
   "src/views/admin/learning-hours/InstructorTab.vue": {
-    "mtime": 1787110625.5695705,
-    "ast_hash": "b5264f96d18fbc7cc61d974412cc895d",
+    "mtime": 1787121167.6435654,
+    "ast_hash": "d06bda1cbf47b10842ecfa94ee419bcb",
     "semantic_hash": ""
   },
   "src/views/admin/learning-hours/LearningHoursView.vue": {
@@ -500,13 +500,28 @@
     "semantic_hash": ""
   },
   "src/views/admin/learning-hours/OverviewTab.vue": {
-    "mtime": 1787107966.3501155,
-    "ast_hash": "36fb17a3a1e62bc4cb9b257725b7d8dd",
+    "mtime": 1787111491.711101,
+    "ast_hash": "631b9a28b98a67424e22cb281738c894",
     "semantic_hash": ""
   },
   "src/views/admin/learning-hours/ParticipantTab.vue": {
-    "mtime": 1787108006.7033367,
-    "ast_hash": "267a6a3e9b0d2c97f4d913e75d289410",
+    "mtime": 1787111499.6796544,
+    "ast_hash": "fe210701056d06b586574db34c5e0bad",
+    "semantic_hash": ""
+  },
+  ".opencode/opencode.json": {
+    "mtime": 1787120059.5573738,
+    "ast_hash": "f2ae21510d07365eb2bce8159272c7a0",
+    "semantic_hash": ""
+  },
+  ".opencode/plugins/graphify.js": {
+    "mtime": 1787120059.5563786,
+    "ast_hash": "b33d000860642c6f4907a877e0387a21",
+    "semantic_hash": ""
+  },
+  "AGENTS.md": {
+    "mtime": 1787120059.5553787,
+    "ast_hash": "21ceb6533048be51308e69e7b74a35cf",
     "semantic_hash": ""
   }
 }

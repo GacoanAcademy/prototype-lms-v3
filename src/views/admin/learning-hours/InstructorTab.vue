@@ -32,17 +32,19 @@ const programs = computed(() => {
     instructors: Set<string>; avg_pass_rate: number
   }> = {}
   for (const log of logs) {
-    if (!map[log.program_id]) {
-      map[log.program_id] = {
+    let entry = map[log.program_id]
+    if (!entry) {
+      entry = {
         program_id: log.program_id,
         name: lhPrograms.find((p) => p.program_id === log.program_id)?.name || log.program_id,
         total_hours: 0,
         instructors: new Set(),
         avg_pass_rate: 0,
       }
+      map[log.program_id] = entry
     }
-    map[log.program_id].total_hours += log.duration_seconds / 3600
-    map[log.program_id].instructors.add(log.user_id)
+    entry.total_hours += log.duration_seconds / 3600
+    entry.instructors.add(log.user_id)
   }
   for (const prog of Object.values(map)) {
     const progLogs = logs.filter((l) => l.program_id === prog.program_id)
@@ -64,10 +66,11 @@ const materiList = computed(() => {
     percentage_teaching: number; sessions_run: number; avg_class_size: number; pass_rate: number
   }> = {}
   for (const log of logs) {
-    if (!map[log.materi_id]) {
+    let entry = map[log.materi_id]
+    if (!entry) {
       const materi = lhMateri.find((m) => m.materi_id === log.materi_id)
       const est = materi?.estimated_teaching_hours ?? 1.0
-      map[log.materi_id] = {
+      entry = {
         materi_id: log.materi_id,
         name: materi?.name || log.materi_id,
         total_teaching_hours: 0,
@@ -78,8 +81,8 @@ const materiList = computed(() => {
         avg_class_size: 0,
         pass_rate: 0,
       }
+      map[log.materi_id] = entry
     }
-    const entry = map[log.materi_id]
     entry.total_teaching_hours += log.duration_seconds / 3600
     entry.sessions_run++
   }
@@ -101,8 +104,9 @@ const instructorList = computed<LHInstructorSummary[]>(() => {
   if (selectedMateriId.value) logs = logs.filter((l) => l.materi_id === selectedMateriId.value)
   const map: Record<string, LHInstructorSummary> = {}
   for (const log of logs) {
-    if (!map[log.user_id]) {
-      map[log.user_id] = {
+    let entry = map[log.user_id]
+    if (!entry) {
+      entry = {
         user_id: log.user_id,
         name: lhUsers.find((u) => u.user_id === log.user_id)?.name || log.user_id,
         total_hours: 0,
@@ -113,8 +117,8 @@ const instructorList = computed<LHInstructorSummary[]>(() => {
         effectiveness_score: 0,
         last_active_date: log.session_date,
       }
+      map[log.user_id] = entry
     }
-    const entry = map[log.user_id]
     entry.total_hours += log.duration_seconds / 3600
     entry.sessions_count++
     entry.participants_handled += log.participants_count || 0
@@ -158,11 +162,12 @@ const instructorDetail = computed(() => {
   }> = {}
 
   for (const log of logs) {
-    if (!materiMap[log.materi_id]) {
+    let entry = materiMap[log.materi_id]
+    if (!entry) {
       const materi = lhMateri.find((m) => m.materi_id === log.materi_id)
       const prog = lhPrograms.find((p) => p.program_id === log.program_id)
       const est = materi?.estimated_teaching_hours ?? 1.0
-      materiMap[log.materi_id] = {
+      entry = {
         materi_id: log.materi_id,
         name: materi?.name || log.materi_id,
         program_name: prog?.name || log.program_id,
@@ -175,8 +180,8 @@ const instructorDetail = computed(() => {
         participants_passed: 0,
         pass_rate: 0,
       }
+      materiMap[log.materi_id] = entry
     }
-    const entry = materiMap[log.materi_id]
     entry.sessions_run++
     entry.total_hours += log.duration_seconds / 3600
     entry.participants_count += log.participants_count || 0

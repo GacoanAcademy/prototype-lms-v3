@@ -51,9 +51,13 @@ const trendData = computed(() => {
   const logs = filterLogs().filter((l) => l.role === 'participant')
   const dateMap: Record<string, { materi: number; test: number }> = {}
   for (const log of logs) {
-    if (!dateMap[log.session_date]) dateMap[log.session_date] = { materi: 0, test: 0 }
-    if (log.activity_type === 'MATERI') dateMap[log.session_date].materi += log.duration_seconds / 3600
-    else if (log.activity_type === 'TEST') dateMap[log.session_date].test += log.duration_seconds / 3600
+    let dEntry = dateMap[log.session_date]
+    if (!dEntry) {
+      dEntry = { materi: 0, test: 0 }
+      dateMap[log.session_date] = dEntry
+    }
+    if (log.activity_type === 'MATERI') dEntry.materi += log.duration_seconds / 3600
+    else if (log.activity_type === 'TEST') dEntry.test += log.duration_seconds / 3600
   }
   const sorted = Object.keys(dateMap).sort()
   const weeklyMap: Record<string, { materi: number; test: number }> = {}
@@ -61,16 +65,23 @@ const trendData = computed(() => {
     const dt = new Date(d)
     const weekStart = new Date(dt)
     weekStart.setDate(dt.getDate() - dt.getDay())
-    const key = weekStart.toISOString().split('T')[0]
-    if (!weeklyMap[key]) weeklyMap[key] = { materi: 0, test: 0 }
-    weeklyMap[key].materi += dateMap[d].materi
-    weeklyMap[key].test += dateMap[d].test
+    const key = weekStart.toISOString().slice(0, 10)
+    let wEntry = weeklyMap[key]
+    if (!wEntry) {
+      wEntry = { materi: 0, test: 0 }
+      weeklyMap[key] = wEntry
+    }
+    const dEntry = dateMap[d]
+    if (dEntry) {
+      wEntry.materi += dEntry.materi
+      wEntry.test += dEntry.test
+    }
   }
   const weeks = Object.keys(weeklyMap).sort()
   return {
     labels: weeks.map((w) => w.slice(5)),
-    materiData: weeks.map((w) => weeklyMap[w].materi),
-    testData: weeks.map((w) => weeklyMap[w].test),
+    materiData: weeks.map((w) => weeklyMap[w]?.materi ?? 0),
+    testData: weeks.map((w) => weeklyMap[w]?.test ?? 0),
   }
 })
 

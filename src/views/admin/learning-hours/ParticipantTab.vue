@@ -28,8 +28,9 @@ const programs = computed<LHProgramSummary[]>(() => {
   const logs = filterParticipantLogs()
   const map: Record<string, LHProgramSummary> = {}
   for (const log of logs) {
-    if (!map[log.program_id]) {
-      map[log.program_id] = {
+    let entry = map[log.program_id]
+    if (!entry) {
+      entry = {
         program_id: log.program_id,
         name: lhPrograms.find((p) => p.program_id === log.program_id)?.name || log.program_id,
         total_hours: 0,
@@ -38,8 +39,8 @@ const programs = computed<LHProgramSummary[]>(() => {
         materi_hours: 0,
         test_hours: 0,
       }
+      map[log.program_id] = entry
     }
-    const entry = map[log.program_id]
     entry.total_hours += log.duration_seconds / 3600
     if (log.activity_type === 'MATERI') entry.materi_hours += log.duration_seconds / 3600
     else if (log.activity_type === 'TEST') entry.test_hours += log.duration_seconds / 3600
@@ -59,8 +60,9 @@ const materiList = computed<LHMateriSummary[]>(() => {
   const logs = filterParticipantLogs().filter((l) => l.program_id === selectedProgramId.value)
   const map: Record<string, LHMateriSummary> = {}
   for (const log of logs) {
-    if (!map[log.materi_id]) {
-      map[log.materi_id] = {
+    let entry = map[log.materi_id]
+    if (!entry) {
+      entry = {
         materi_id: log.materi_id,
         name: lhMateri.find((m) => m.materi_id === log.materi_id)?.name || log.materi_id,
         program_id: log.program_id,
@@ -70,8 +72,8 @@ const materiList = computed<LHMateriSummary[]>(() => {
         materi_hours: 0,
         test_hours: 0,
       }
+      map[log.materi_id] = entry
     }
-    const entry = map[log.materi_id]
     entry.total_hours += log.duration_seconds / 3600
     if (log.activity_type === 'MATERI') entry.materi_hours += log.duration_seconds / 3600
     else if (log.activity_type === 'TEST') entry.test_hours += log.duration_seconds / 3600
@@ -100,8 +102,9 @@ const userList = computed<LHUserSummary[]>(() => {
   }
   const map: Record<string, LHUserSummary> = {}
   for (const log of logs) {
-    if (!map[log.user_id]) {
-      map[log.user_id] = {
+    let entry = map[log.user_id]
+    if (!entry) {
+      entry = {
         user_id: log.user_id,
         name: lhUsers.find((u) => u.user_id === log.user_id)?.name || log.user_id,
         total_hours: 0,
@@ -111,8 +114,8 @@ const userList = computed<LHUserSummary[]>(() => {
         last_activity_date: log.session_date,
         completion_status: 'NOT_STARTED',
       }
+      map[log.user_id] = entry
     }
-    const entry = map[log.user_id]
     entry.total_hours += log.duration_seconds / 3600
     if (log.activity_type === 'MATERI') entry.materi_hours += log.duration_seconds / 3600
     else if (log.activity_type === 'TEST') entry.test_hours += log.duration_seconds / 3600

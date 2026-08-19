@@ -15,8 +15,8 @@
     "semantic_hash": ""
   },
   "package.json": {
-    "mtime": 1787106547.033032,
-    "ast_hash": "9bb9d8f38d1953afe84fce2912b7f5e0",
+    "mtime": 1787107541.95883,
+    "ast_hash": "8a51ae1d7617afec6cf155e69d02d066",
     "semantic_hash": ""
   },
   "postcss.config.js": {
@@ -50,8 +50,8 @@
     "semantic_hash": ""
   },
   "src/components/layout/Sidebar.vue": {
-    "mtime": 1787106547.03918,
-    "ast_hash": "b7c84dd7d2a07a41b17de68ff5d6bc66",
+    "mtime": 1787108099.3882265,
+    "ast_hash": "afd6a6857dde6d592f608240f1238a84",
     "semantic_hash": ""
   },
   "src/data/mockData.ts": {
@@ -70,8 +70,8 @@
     "semantic_hash": ""
   },
   "src/router/index.ts": {
-    "mtime": 1787106547.0436842,
-    "ast_hash": "dd4717f0b1933ed0263113557eee8703",
+    "mtime": 1787108098.2835922,
+    "ast_hash": "06e398813ebd8df99432bc512db20b6c",
     "semantic_hash": ""
   },
   "src/stores/auth.ts": {
@@ -452,6 +452,61 @@
   "prd.md": {
     "mtime": 1787106567.2965324,
     "ast_hash": "f876b615ecc6d36dd2ff2d00b6600958",
+    "semantic_hash": ""
+  },
+  "src/components/charts/DonutChart.vue": {
+    "mtime": 1787107767.8700962,
+    "ast_hash": "76f5382f4ccd42c6420af8514e74ce31",
+    "semantic_hash": ""
+  },
+  "src/components/charts/HorizontalBarChart.vue": {
+    "mtime": 1787107774.1539485,
+    "ast_hash": "d07fd8bfa702edeb7720395d47064fbd",
+    "semantic_hash": ""
+  },
+  "src/components/charts/TrendLineChart.vue": {
+    "mtime": 1787107762.138255,
+    "ast_hash": "20aaa0474d960c1115647b3590cdba6c",
+    "semantic_hash": ""
+  },
+  "src/data/learningHoursMock.ts": {
+    "mtime": 1787109912.28459,
+    "ast_hash": "3bd2f775c08a8b2891d587563f474f80",
+    "semantic_hash": ""
+  },
+  "src/types/learningHours.ts": {
+    "mtime": 1787109782.7380428,
+    "ast_hash": "43fa57da798d7002cab84cc50aad224e",
+    "semantic_hash": ""
+  },
+  "src/views/admin/learning-hours/FilterBar.vue": {
+    "mtime": 1787107791.357024,
+    "ast_hash": "84d7a07ddf1f54d682948e3f99ed3565",
+    "semantic_hash": ""
+  },
+  "src/views/admin/learning-hours/HeroMetricCard.vue": {
+    "mtime": 1787107779.355476,
+    "ast_hash": "b0030d3e17b960da82444c0967e4afa7",
+    "semantic_hash": ""
+  },
+  "src/views/admin/learning-hours/InstructorTab.vue": {
+    "mtime": 1787110625.5695705,
+    "ast_hash": "b5264f96d18fbc7cc61d974412cc895d",
+    "semantic_hash": ""
+  },
+  "src/views/admin/learning-hours/LearningHoursView.vue": {
+    "mtime": 1787108084.902286,
+    "ast_hash": "96914b37b4c042ea1afca802a8667ae0",
+    "semantic_hash": ""
+  },
+  "src/views/admin/learning-hours/OverviewTab.vue": {
+    "mtime": 1787107966.3501155,
+    "ast_hash": "36fb17a3a1e62bc4cb9b257725b7d8dd",
+    "semantic_hash": ""
+  },
+  "src/views/admin/learning-hours/ParticipantTab.vue": {
+    "mtime": 1787108006.7033367,
+    "ast_hash": "267a6a3e9b0d2c97f4d913e75d289410",
     "semantic_hash": ""
   }
 }

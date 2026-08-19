@@ -106,6 +106,7 @@ const instructorList = computed<LHInstructorSummary[]>(() => {
   const materiSetMap: Record<string, Set<string>> = {}
   for (const log of logs) {
     let entry = map[log.user_id]
+    let materiSet = materiSetMap[log.user_id]
     if (!entry) {
       entry = {
         user_id: log.user_id,
@@ -121,7 +122,8 @@ const instructorList = computed<LHInstructorSummary[]>(() => {
         last_active_date: log.session_date,
       }
       map[log.user_id] = entry
-      materiSetMap[log.user_id] = new Set()
+      materiSet = new Set()
+      materiSetMap[log.user_id] = materiSet
     }
     entry.total_hours += log.duration_seconds / 3600
     entry.sessions_count++
@@ -131,7 +133,9 @@ const instructorList = computed<LHInstructorSummary[]>(() => {
     const est = materi?.estimated_teaching_hours ?? 1.0
     entry.teaching_hours += est
 
-    materiSetMap[log.user_id].add(log.materi_id)
+    if (materiSet) {
+      materiSet.add(log.materi_id)
+    }
 
     if (log.session_date > entry.last_active_date) entry.last_active_date = log.session_date
   }
@@ -141,7 +145,7 @@ const instructorList = computed<LHInstructorSummary[]>(() => {
     const totalPassed = instLogs.reduce((s, l) => s + (l.participants_passed || 0), 0)
     inst.effectiveness_score = totalP > 0 ? (totalPassed / totalP) * 100 : 0
     inst.percentage_teaching = inst.teaching_hours > 0 ? (inst.total_hours / inst.teaching_hours) * 100 : 0
-    inst.materis_count = materiSetMap[inst.user_id].size
+    inst.materis_count = materiSetMap[inst.user_id]?.size ?? 0
     inst.avg_actual_hours_per_materi = inst.materis_count > 0 ? inst.total_hours / inst.materis_count : 0
   }
   return Object.values(map).sort((a, b) => b.total_hours - a.total_hours)

@@ -141,6 +141,7 @@ const topPrograms = computed(() => {
         :labels="topPrograms.map((p) => p.name)"
         :data="topPrograms.map((p) => p.hours)"
         horizontal
+        hide-vertical-label
       />
     </div>
   </div>

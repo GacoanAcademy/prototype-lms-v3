@@ -460,8 +460,8 @@
     "semantic_hash": ""
   },
   "src/components/charts/HorizontalBarChart.vue": {
-    "mtime": 1787107774.1539485,
-    "ast_hash": "d07fd8bfa702edeb7720395d47064fbd",
+    "mtime": 1787123239.063177,
+    "ast_hash": "0ada0368c975af86e623839e7e6e5d7b",
     "semantic_hash": ""
   },
   "src/components/charts/TrendLineChart.vue": {
@@ -500,8 +500,8 @@
     "semantic_hash": ""
   },
   "src/views/admin/learning-hours/OverviewTab.vue": {
-    "mtime": 1787111491.711101,
-    "ast_hash": "631b9a28b98a67424e22cb281738c894",
+    "mtime": 1787123245.1508136,
+    "ast_hash": "f588eebff14b4c9e3e9dff07edf59cd9",
     "semantic_hash": ""
   },
   "src/views/admin/learning-hours/ParticipantTab.vue": {

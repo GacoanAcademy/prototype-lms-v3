@@ -1,16 +1,16 @@
 # Graph Report - prototype-lms-v3  (2026-08-19)
 
 ## Corpus Check
-- 101 files · ~56,567 words
+- 104 files · ~57,118 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 993 nodes · 958 edges · 92 communities (73 shown, 19 thin omitted)
+- 998 nodes · 961 edges · 94 communities (73 shown, 21 thin omitted)
 - Extraction: 100% EXTRACTED · 0% INFERRED · 0% AMBIGUOUS
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `5beb7076`
+- Built from commit: `1ae3dee8`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -94,13 +94,15 @@
 - AdminDashboard.vue
 - InstructorDashboard.vue
 - SupervisorDashboard.vue
-- InstructorTab.vue
+- ParticipantTab.vue
 - learningHours.ts
-- OverviewTab.vue
+- InstructorTab.vue
 - learningHoursMock.ts
 - DonutChart.vue
 - HorizontalBarChart.vue
 - TrendLineChart.vue
+- graphify.js
+- AGENTS.md
 
 ## God Nodes (most connected - your core abstractions)
 1. `PRD: Learning Hours Dashboard (LMS - Academy Gacoan)` - 12 edges
@@ -120,7 +122,7 @@
 ## Import Cycles
 - None detected.
 
-## Communities (92 total, 19 thin omitted)
+## Communities (94 total, 21 thin omitted)
 
 ### Community 0 - "types/index.ts"
 Cohesion: 0.04
@@ -362,17 +364,17 @@ Nodes (3): auth, myClasses, tableData
 Cohesion: 0.50
 Nodes (3): auth, myClasses, myProgress
 
-### Community 85 - "InstructorTab.vue"
+### Community 85 - "ParticipantTab.vue"
 Cohesion: 0.05
-Nodes (30): applyFilters(), clearPrograms(), dateFrom, dateTo, emit, searchQuery, selectedPrograms, toggleProgram() (+22 more)
+Nodes (29): applyFilters(), clearPrograms(), dateFrom, dateTo, emit, searchQuery, selectedPrograms, toggleProgram() (+21 more)
 
 ### Community 86 - "learningHours.ts"
 Cohesion: 0.14
 Nodes (13): LHActivityLog, LHActivityType, LHCompletionStatus, LHFilters, LHInstructorMateriSummary, LHInstructorSummary, LHMateri, LHMateriSummary (+5 more)
 
-### Community 87 - "OverviewTab.vue"
-Cohesion: 0.15
-Nodes (9): displayValue, props, activeInstructors, activeParticipants, props, splitData, topPrograms, totalHours (+1 more)
+### Community 87 - "InstructorTab.vue"
+Cohesion: 0.11
+Nodes (10): DrillLevel, instructorDetail, instructorList, level, materiList, programs, props, selectedInstructorId (+2 more)
 
 ### Community 88 - "learningHoursMock.ts"
 Cohesion: 0.29
@@ -391,9 +393,9 @@ Cohesion: 0.50
 Nodes (3): chartData, chartOptions, props
 
 ## Knowledge Gaps
-- **612 isolated node(s):** `$schema`, `semi`, `singleQuote`, `printWidth`, `name` (+607 more)
+- **613 isolated node(s):** `$schema`, `semi`, `singleQuote`, `printWidth`, `name` (+608 more)
   These have ≤1 connection - possible missing edges or undocumented components.
-- **19 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **21 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
@@ -401,7 +403,7 @@ _Questions this graph is uniquely positioned to answer:_
 - **Why does `devDependencies` connect `devDependencies` to `package.json`?**
   _High betweenness centrality (0.002) - this node is a cross-community bridge._
 - **What connects `$schema`, `semi`, `singleQuote` to the rest of the system?**
-  _612 weakly-connected nodes found - possible documentation gaps or missing edges._
+  _613 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `types/index.ts` be split into smaller, more focused modules?**
   _Cohesion score 0.03571428571428571 - nodes in this community are weakly interconnected._
 - **Should `ClassForm.vue` be split into smaller, more focused modules?**

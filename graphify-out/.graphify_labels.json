@@ -84,11 +84,13 @@
   "82": "UserManagement.vue",
   "83": "tailwind.config.js",
   "84": "vite.config.ts",
-  "85": "InstructorTab.vue",
+  "85": "ParticipantTab.vue",
   "86": "learningHours.ts",
-  "87": "OverviewTab.vue",
+  "87": "InstructorTab.vue",
   "88": "learningHoursMock.ts",
   "89": "DonutChart.vue",
   "90": "HorizontalBarChart.vue",
-  "91": "TrendLineChart.vue"
+  "91": "TrendLineChart.vue",
+  "92": "graphify.js",
+  "93": "AGENTS.md"
 }

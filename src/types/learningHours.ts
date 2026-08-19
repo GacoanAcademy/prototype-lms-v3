@@ -80,6 +80,8 @@ export interface LHInstructorSummary {
   total_hours: number
   teaching_hours: number
   percentage_teaching: number
+  avg_actual_hours_per_materi: number
+  materis_count: number
   sessions_count: number
   participants_handled: number
   effectiveness_score: number

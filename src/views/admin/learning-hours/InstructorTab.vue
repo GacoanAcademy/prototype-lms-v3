@@ -103,8 +103,10 @@ const instructorList = computed<LHInstructorSummary[]>(() => {
   if (selectedProgramId.value) logs = logs.filter((l) => l.program_id === selectedProgramId.value)
   if (selectedMateriId.value) logs = logs.filter((l) => l.materi_id === selectedMateriId.value)
   const map: Record<string, LHInstructorSummary> = {}
+  const materiSetMap: Record<string, Set<string>> = {}
   for (const log of logs) {
     let entry = map[log.user_id]
+    let materiSet = materiSetMap[log.user_id]
     if (!entry) {
       entry = {
         user_id: log.user_id,
@@ -112,12 +114,16 @@ const instructorList = computed<LHInstructorSummary[]>(() => {
         total_hours: 0,
         teaching_hours: 0,
         percentage_teaching: 0,
+        avg_actual_hours_per_materi: 0,
+        materis_count: 0,
         sessions_count: 0,
         participants_handled: 0,
         effectiveness_score: 0,
         last_active_date: log.session_date,
       }
       map[log.user_id] = entry
+      materiSet = new Set()
+      materiSetMap[log.user_id] = materiSet
     }
     entry.total_hours += log.duration_seconds / 3600
     entry.sessions_count++
@@ -127,6 +133,10 @@ const instructorList = computed<LHInstructorSummary[]>(() => {
     const est = materi?.estimated_teaching_hours ?? 1.0
     entry.teaching_hours += est
 
+    if (materiSet) {
+      materiSet.add(log.materi_id)
+    }
+
     if (log.session_date > entry.last_active_date) entry.last_active_date = log.session_date
   }
   for (const inst of Object.values(map)) {
@@ -135,6 +145,8 @@ const instructorList = computed<LHInstructorSummary[]>(() => {
     const totalPassed = instLogs.reduce((s, l) => s + (l.participants_passed || 0), 0)
     inst.effectiveness_score = totalP > 0 ? (totalPassed / totalP) * 100 : 0
     inst.percentage_teaching = inst.teaching_hours > 0 ? (inst.total_hours / inst.teaching_hours) * 100 : 0
+    inst.materis_count = materiSetMap[inst.user_id]?.size ?? 0
+    inst.avg_actual_hours_per_materi = inst.materis_count > 0 ? inst.total_hours / inst.materis_count : 0
   }
   return Object.values(map).sort((a, b) => b.total_hours - a.total_hours)
 })
@@ -208,6 +220,7 @@ const instructorDetail = computed(() => {
 
   const overallPct = grandTotalTeaching > 0 ? (grandTotalActual / grandTotalTeaching) * 100 : 0
   const overallEffectiveness = grandParticipants > 0 ? (grandPassed / grandParticipants) * 100 : 0
+  const avgActualHoursPerMateri = materis.length > 0 ? grandTotalActual / materis.length : 0
 
   return {
     instructor: inst,
@@ -217,6 +230,8 @@ const instructorDetail = computed(() => {
     percentageTeaching: overallPct,
     totalSessions: logs.length,
     effectivenessScore: overallEffectiveness,
+    avgActualHoursPerMateri,
+    materisCount: materis.length,
   }
 })
 
@@ -377,13 +392,13 @@ function effectivenessClass(score: number) {
       </table>
     </div>
 
-    <!-- Level 3: Instructors List -->
+<!-- Level 3: Instructors List -->
     <div v-else-if="level === 'instructor'" class="bg-white rounded-lg shadow border border-gray-100 overflow-hidden">
       <table class="w-full text-sm">
         <thead class="bg-gray-50 text-left">
           <tr>
             <th class="px-4 py-3 font-medium text-gray-600">Instructor</th>
-            <th class="px-4 py-3 font-medium text-gray-600 text-right">Teaching Hours (Est x Sessions)</th>
+            <th class="px-4 py-3 font-medium text-gray-600 text-right">Avg Actual Hours / Materi</th>
             <th class="px-4 py-3 font-medium text-gray-600 text-right">Actual Hours</th>
             <th class="px-4 py-3 font-medium text-gray-600 text-right">% Actual / Teaching</th>
             <th class="px-4 py-3 font-medium text-gray-600 text-right">Sessions</th>
@@ -401,7 +416,7 @@ function effectivenessClass(score: number) {
             @click="drillIntoInstructor(inst.user_id)"
           >
             <td class="px-4 py-3 font-medium text-gray-800">{{ inst.name }}</td>
-            <td class="px-4 py-3 text-right font-medium text-blue-700">{{ formatHours(inst.teaching_hours) }}h</td>
+            <td class="px-4 py-3 text-right font-semibold text-purple-700">{{ formatHours(inst.avg_actual_hours_per_materi) }}h <span class="text-xs text-gray-400 font-normal">({{ inst.materis_count }} materis)</span></td>
             <td class="px-4 py-3 text-right">{{ formatHours(inst.total_hours) }}h</td>
             <td class="px-4 py-3 text-right font-semibold" :class="inst.percentage_teaching >= 100 ? 'text-blue-600' : 'text-gray-600'">
               {{ inst.percentage_teaching.toFixed(1) }}%
@@ -436,7 +451,7 @@ function effectivenessClass(score: number) {
           </button>
         </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
           <div class="bg-blue-50 p-4 rounded-lg border border-blue-100">
             <p class="text-xs text-blue-600 font-medium mb-1">Teaching Hours (Target)</p>
             <p class="text-2xl font-bold text-blue-900">{{ formatHours(instructorDetail.totalTeachingHours) }}h</p>
@@ -447,6 +462,12 @@ function effectivenessClass(score: number) {
             <p class="text-xs text-gray-500 font-medium mb-1">Total Actual Hours</p>
             <p class="text-2xl font-bold text-gray-900">{{ formatHours(instructorDetail.totalActualHours) }}h</p>
             <p class="text-xs text-gray-500 mt-1">Logged activity duration</p>
+          </div>
+
+          <div class="bg-purple-50 p-4 rounded-lg border border-purple-100">
+            <p class="text-xs text-purple-700 font-medium mb-1">Avg Actual Hours / Materi</p>
+            <p class="text-2xl font-bold text-purple-900">{{ formatHours(instructorDetail.avgActualHoursPerMateri) }}h</p>
+            <p class="text-xs text-purple-700 mt-1">Across {{ instructorDetail.materisCount }} materis taught</p>
           </div>
 
           <div class="bg-emerald-50 p-4 rounded-lg border border-emerald-100">
@@ -476,6 +497,7 @@ function effectivenessClass(score: number) {
               <th class="px-4 py-3 font-medium text-gray-600 text-right">Sessions Run</th>
               <th class="px-4 py-3 font-medium text-gray-600 text-right">Teaching Hours</th>
               <th class="px-4 py-3 font-medium text-gray-600 text-right">Actual Hours</th>
+              <th class="px-4 py-3 font-medium text-gray-600 text-right">Avg Actual Hours / Materi</th>
               <th class="px-4 py-3 font-medium text-gray-600 text-right">% Actual / Teaching</th>
               <th class="px-4 py-3 font-medium text-gray-600 text-right">Pass Rate</th>
             </tr>
@@ -488,6 +510,7 @@ function effectivenessClass(score: number) {
               <td class="px-4 py-3 text-right font-medium">{{ m.sessions_run }}</td>
               <td class="px-4 py-3 text-right font-semibold text-blue-700">{{ formatHours(m.teaching_hours) }}h</td>
               <td class="px-4 py-3 text-right">{{ formatHours(m.total_hours) }}h</td>
+              <td class="px-4 py-3 text-right font-semibold text-purple-700">{{ formatHours(m.sessions_run > 0 ? m.total_hours / m.sessions_run : 0) }}h</td>
               <td class="px-4 py-3 text-right font-medium" :class="m.percentage_teaching >= 100 ? 'text-blue-600' : 'text-gray-600'">
                 {{ m.percentage_teaching.toFixed(1) }}%
               </td>

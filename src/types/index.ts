@@ -240,6 +240,7 @@ export interface ProgramType {
   name: string
   description: string
   programCategoryId: string
+  color?: string
   createdBy: string
   createdAt: string
 }

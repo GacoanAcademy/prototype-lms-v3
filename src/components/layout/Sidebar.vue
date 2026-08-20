@@ -27,6 +27,7 @@ const navItems = computed<MenuEntry[]>(() => {
     return [
       { label: 'Dashboard', to: '/admin/dashboard', icon: '📊' },
       { label: 'Learning Hours', to: '/admin/learning-hours', icon: '⏱️' },
+      { label: 'Training Calendar', to: '/admin/calendar', icon: '📅' },
       { label: 'Test Bank', to: '/admin/tests', icon: '📝' },
       { label: 'Materi Bank', to: '/admin/materi', icon: '📚' },
       { label: 'Materi Types', to: '/admin/materi-type', icon: '📦' },
@@ -53,6 +54,7 @@ const navItems = computed<MenuEntry[]>(() => {
     return [
       { label: 'Dashboard', to: '/instructor/dashboard', icon: '📊' },
       { label: 'My Classes', to: '/instructor/classes', icon: '👥' },
+      { label: 'Training Calendar', to: '/instructor/calendar', icon: '📅' },
       { label: 'KHS (Transcript)', to: '/instructor/khs', icon: '🎓' },
       { label: 'LGI (Progress)', to: '/instructor/lgi', icon: '📈' },
       { label: 'Instructor Raport', to: '/instructor/raport', icon: '📋' },

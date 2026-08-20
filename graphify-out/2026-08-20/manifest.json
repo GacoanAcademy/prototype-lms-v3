@@ -50,13 +50,13 @@
     "semantic_hash": ""
   },
   "src/components/layout/Sidebar.vue": {
-    "mtime": 1787207287.2220542,
-    "ast_hash": "813ea7aa0ad43cd57dbf7f9c77c0981f",
+    "mtime": 1787108099.3882265,
+    "ast_hash": "afd6a6857dde6d592f608240f1238a84",
     "semantic_hash": ""
   },
   "src/data/mockData.ts": {
-    "mtime": 1787210038.1503148,
-    "ast_hash": "5e4d30f4c7606b78ee5b981c30fb8dcd",
+    "mtime": 1787106547.0413253,
+    "ast_hash": "2ee07aa2101b90fcb6ae77bdb8974c93",
     "semantic_hash": ""
   },
   "src/data/mockRaportData.ts": {
@@ -70,8 +70,8 @@
     "semantic_hash": ""
   },
   "src/router/index.ts": {
-    "mtime": 1787207264.9246843,
-    "ast_hash": "cae5da8bd17e1eb7ca0a33cc437de525",
+    "mtime": 1787108098.2835922,
+    "ast_hash": "06e398813ebd8df99432bc512db20b6c",
     "semantic_hash": ""
   },
   "src/stores/auth.ts": {
@@ -80,8 +80,8 @@
     "semantic_hash": ""
   },
   "src/types/index.ts": {
-    "mtime": 1787210023.8933973,
-    "ast_hash": "b43641377210e54baec6d6503b59ad1f",
+    "mtime": 1787106547.045068,
+    "ast_hash": "4de00e2659d399bc02ce93dd65132241",
     "semantic_hash": ""
   },
   "src/utils/raportCalculator.ts": {
@@ -225,8 +225,8 @@
     "semantic_hash": ""
   },
   "src/views/admin/ProgramTypeForm.vue": {
-    "mtime": 1787211185.7702386,
-    "ast_hash": "d65f9b4da6f0d167878b97ea6116a9f3",
+    "mtime": 1787106547.06188,
+    "ast_hash": "83ddb4aa7633abfe4cc84bb3282ececa",
     "semantic_hash": ""
   },
   "src/views/admin/ProgramTypeList.vue": {
@@ -510,8 +510,8 @@
     "semantic_hash": ""
   },
   ".opencode/opencode.json": {
-    "mtime": 1787206210.014619,
-    "ast_hash": "1efe24ecf938911d4f23e4b1c6ec91f7",
+    "mtime": 1787120059.5573738,
+    "ast_hash": "f2ae21510d07365eb2bce8159272c7a0",
     "semantic_hash": ""
   },
   ".opencode/plugins/graphify.js": {
@@ -522,31 +522,6 @@
   "AGENTS.md": {
     "mtime": 1787120059.5553787,
     "ast_hash": "21ceb6533048be51308e69e7b74a35cf",
-    "semantic_hash": ""
-  },
-  "src/components/calendar/CalendarFilters.vue": {
-    "mtime": 1787210652.4030154,
-    "ast_hash": "5f83894ad9d97222c1f0e63aaa02c723",
-    "semantic_hash": ""
-  },
-  "src/components/calendar/CalendarHeader.vue": {
-    "mtime": 1787207332.3488846,
-    "ast_hash": "5deec2db947a1794eeeb611101a2a0b6",
-    "semantic_hash": ""
-  },
-  "src/components/calendar/CalendarMonthGrid.vue": {
-    "mtime": 1787211181.0160046,
-    "ast_hash": "198c51096e4fd94b90810873a1619a28",
-    "semantic_hash": ""
-  },
-  "src/components/calendar/EventBar.vue": {
-    "mtime": 1787210071.7132354,
-    "ast_hash": "fe612436ed0798c5b3dd2ab5b2f5a1b3",
-    "semantic_hash": ""
-  },
-  "src/views/calendar/CalendarView.vue": {
-    "mtime": 1787210166.524057,
-    "ast_hash": "2e120b39f423df5cb277a2801c966d4d",
     "semantic_hash": ""
   }
 }

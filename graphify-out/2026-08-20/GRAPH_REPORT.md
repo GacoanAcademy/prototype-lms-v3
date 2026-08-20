@@ -1,16 +1,16 @@
-# Graph Report - prototype-lms-v3  (2026-08-20)
+# Graph Report - prototype-lms-v3  (2026-08-19)
 
 ## Corpus Check
-- 109 files · ~59,460 words
+- 104 files · ~57,195 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 1051 nodes · 1012 edges · 99 communities (77 shown, 22 thin omitted)
+- 998 nodes · 961 edges · 94 communities (73 shown, 21 thin omitted)
 - Extraction: 100% EXTRACTED · 0% INFERRED · 0% AMBIGUOUS
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `980938ee`
+- Built from commit: `fca2605e`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -94,20 +94,15 @@
 - AdminDashboard.vue
 - InstructorDashboard.vue
 - SupervisorDashboard.vue
-- InstructorTab.vue
+- ParticipantTab.vue
 - learningHours.ts
-- CalendarMonthGrid.vue
+- InstructorTab.vue
 - learningHoursMock.ts
 - DonutChart.vue
 - HorizontalBarChart.vue
 - TrendLineChart.vue
 - graphify.js
 - AGENTS.md
-- CalendarView.vue
-- OverviewTab.vue
-- CalendarFilters.vue
-- opencode.json
-- CalendarHeader.vue
 
 ## God Nodes (most connected - your core abstractions)
 1. `PRD: Learning Hours Dashboard (LMS - Academy Gacoan)` - 12 edges
@@ -127,7 +122,7 @@
 ## Import Cycles
 - None detected.
 
-## Communities (99 total, 22 thin omitted)
+## Communities (94 total, 21 thin omitted)
 
 ### Community 0 - "types/index.ts"
 Cohesion: 0.04
@@ -290,8 +285,8 @@ Cohesion: 0.25
 Nodes (6): auth, forms, myClasses, mySubmissions, pendingMethods, SubmissionForm
 
 ### Community 40 - "ProgramTypeForm.vue"
-Cohesion: 0.22
-Nodes (7): color, description, name, presetColors, programCategoryId, route, router
+Cohesion: 0.29
+Nodes (5): description, name, programCategoryId, route, router
 
 ### Community 41 - "instructor/ClassDetail.vue"
 Cohesion: 0.29
@@ -369,17 +364,17 @@ Nodes (3): auth, myClasses, tableData
 Cohesion: 0.50
 Nodes (3): auth, myClasses, myProgress
 
-### Community 85 - "InstructorTab.vue"
+### Community 85 - "ParticipantTab.vue"
 Cohesion: 0.05
-Nodes (30): applyFilters(), clearPrograms(), dateFrom, dateTo, emit, searchQuery, selectedPrograms, toggleProgram() (+22 more)
+Nodes (29): applyFilters(), clearPrograms(), dateFrom, dateTo, emit, searchQuery, selectedPrograms, toggleProgram() (+21 more)
 
 ### Community 86 - "learningHours.ts"
 Cohesion: 0.14
 Nodes (13): LHActivityLog, LHActivityType, LHCompletionStatus, LHFilters, LHInstructorMateriSummary, LHInstructorSummary, LHMateri, LHMateriSummary (+5 more)
 
-### Community 87 - "CalendarMonthGrid.vue"
+### Community 87 - "InstructorTab.vue"
 Cohesion: 0.11
-Nodes (12): DayCell, emit, eventsByDate, getEventsForDate(), grid, openPopover(), popoverDate, popoverEvents (+4 more)
+Nodes (10): DrillLevel, instructorDetail, instructorList, level, materiList, programs, props, selectedInstructorId (+2 more)
 
 ### Community 88 - "learningHoursMock.ts"
 Cohesion: 0.29
@@ -397,34 +392,18 @@ Nodes (3): chartData, chartOptions, props
 Cohesion: 0.50
 Nodes (3): chartData, chartOptions, props
 
-### Community 94 - "CalendarView.vue"
-Cohesion: 0.12
-Nodes (10): auth, currentMonth, currentYear, filters, instructors, isAdmin, now, router (+2 more)
-
-### Community 95 - "OverviewTab.vue"
-Cohesion: 0.15
-Nodes (9): displayValue, props, activeInstructors, activeParticipants, props, splitData, topPrograms, totalHours (+1 more)
-
-### Community 96 - "CalendarFilters.vue"
-Cohesion: 0.32
-Nodes (7): activeFilters, emit, props, showProgramLegend, statusOptions, toggleProgramType(), toggleStatus()
-
-### Community 97 - "opencode.json"
-Cohesion: 0.50
-Nodes (3): plugin, $schema, .opencode/plugins/graphify.js
-
 ## Knowledge Gaps
-- **642 isolated node(s):** `$schema`, `.opencode/plugins/graphify.js`, `$schema`, `semi`, `singleQuote` (+637 more)
+- **613 isolated node(s):** `$schema`, `semi`, `singleQuote`, `printWidth`, `name` (+608 more)
   These have ≤1 connection - possible missing edges or undocumented components.
-- **22 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **21 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
 - **Why does `devDependencies` connect `devDependencies` to `package.json`?**
   _High betweenness centrality (0.002) - this node is a cross-community bridge._
-- **What connects `$schema`, `.opencode/plugins/graphify.js`, `$schema` to the rest of the system?**
-  _642 weakly-connected nodes found - possible documentation gaps or missing edges._
+- **What connects `$schema`, `semi`, `singleQuote` to the rest of the system?**
+  _613 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `types/index.ts` be split into smaller, more focused modules?**
   _Cohesion score 0.03571428571428571 - nodes in this community are weakly interconnected._
 - **Should `ClassForm.vue` be split into smaller, more focused modules?**

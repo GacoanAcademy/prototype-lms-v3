@@ -54,7 +54,6 @@ function save() {
             type="text"
             class="w-24 border rounded px-2 py-1 text-sm font-mono"
             placeholder="#RRGGBB"
-            @input="color.value = $event.target.value"
           />
         </div>
         <div class="flex flex-wrap gap-1.5 mt-2">

@@ -71,7 +71,10 @@ const grid = computed<DayCell[]>(() => {
 })
 
 function parseDate(dateStr: string): Date {
-  const [y, m, d] = dateStr.split('-').map(Number)
+  const [yStr, mStr, dStr] = dateStr.split('-')
+  const y = Number(yStr) || 0
+  const m = Number(mStr) || 1
+  const d = Number(dStr) || 1
   return new Date(y, m - 1, d)
 }
 

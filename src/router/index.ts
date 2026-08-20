@@ -270,11 +270,16 @@ const routes = [
           name: 'admin-instructor-raport',
           component: () => import('@/views/admin/InstructorRaportList.vue'),
         },
-        {
-          path: 'instructor-raport/:id',
-          name: 'admin-instructor-raport-detail',
-          component: () => import('@/views/admin/InstructorRaportDetail.vue'),
-        },
+       {
+         path: 'instructor-raport/:id',
+         name: 'admin-instructor-raport-detail',
+         component: () => import('@/views/admin/InstructorRaportDetail.vue'),
+       },
+      {
+        path: 'calendar',
+        name: 'admin-calendar',
+        component: () => import('@/views/calendar/CalendarView.vue'),
+      },
 
     ],
   },
@@ -313,11 +318,17 @@ const routes = [
           name: 'instructor-raport',
           component: () => import('@/views/instructor/InstructorRaportView.vue'),
         },
-        {
-          path: 'raport/:id',
-          name: 'instructor-raport-detail',
-          component: () => import('@/views/instructor/InstructorRaportDetail.vue'),
-        },
+      {
+        path: 'raport/:id',
+        name: 'instructor-raport-detail',
+        component: () => import('@/views/instructor/InstructorRaportDetail.vue'),
+      },
+
+      {
+        path: 'calendar',
+        name: 'instructor-calendar',
+        component: () => import('@/views/calendar/CalendarView.vue'),
+      },
 
       {
         path: 'uploads',
